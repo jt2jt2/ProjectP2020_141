@@ -1,7 +1,12 @@
 <!DOCTYPE html> 
 <html lang="ja">
     <head>
-	<title>php3</title>
+    <title>php3</title>
+    <style>
+        table,tr,th,td{
+            border:1px solid #000000;
+        }
+    </style>
     </head>
     <body>    
         <?php
@@ -13,16 +18,14 @@
                     $plusaddress = ["name"=>$_POST['name'],"address" => $_POST['address'], "phone" => $_POST['phone'], "email" =>$_POST['email']];
                     if($_POST!=NULL){
                             $addresses[2]= $plusaddress;
-                            //$addressJSON = json_encode($addresses,JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                     }
                 } else {
                     
                 }
             
 
-            //var_dump($addressJSON);
             function print_table($data_array){
-                print "<table border=1>";
+                print "<table>";
                 print "<tr>";
                 print "<td>";
                 print "名前";
