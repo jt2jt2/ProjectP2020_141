@@ -1,7 +1,12 @@
 <!DOCTYPE html> 
 <html lang="ja">
     <head>
-	<title>php2</title>
+    <title>php2</title>
+    <style>
+        table,tr,th,td{
+            border:1px solid #000000;
+        }
+    </style>
     </head>
     <body>    
         <?php
@@ -11,7 +16,7 @@
                 ["name" =>"工科花子","address" =>  "北海道","phone" => "987-654-3210","email" => "hana@example.com"]
                 ];
             function print_table($data_array){
-                print "<table border=1>";
+                print "<table>";
                 print "<tr>";
                 print "<td>";
                 print "名前";
