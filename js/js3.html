@@ -1,0 +1,24 @@
+<!DOCTYPE html> 
+  <html lang="ja">
+        <head>
+        <title>js3</title>
+
+        </head>
+        <body>
+        <form name="form1">
+            <input type="checkbox" name="checker" value="hoge" > checkbox
+        </form>
+        <button id="btn">button</button>
+        <script>
+            var btn = document.getElementById('btn');
+            btn.addEventListener('click', function() {
+                if(document.form1.checker.checked==false){
+                        document.form1.checker.checked = true;
+                    }else{
+                        document.form1.checker.checked = false;
+                    }
+            },false);
+            </script>
+        </body>
+  </html>
+  
