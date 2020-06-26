@@ -1,0 +1,21 @@
+<!DOCTYPE html> 
+<html lang="ja">
+    <head>
+    <title>js2</title>
+
+    </head>
+    <body>
+    <form name="form1">
+        <input type="text" name="text1">
+    </form>
+    <button id ="btn">button</button>
+    <script>
+        var btn = document.getElementById('btn');
+        btn.addEventListener('click', function() {
+            const text = document.form1.text1.value;
+            alert(text);
+        },false);
+    </script>
+    </body>
+  
+</html>
