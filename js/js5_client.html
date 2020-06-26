@@ -1,0 +1,30 @@
+<!DOCTYPE html> 
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>js5</title>
+    </head>
+    <body>
+    <form id="formmain" name = "formmain" method="post" action="post">     
+        <p>
+            <input name="textMessage" type="text" id= "textMessage" size=36>
+            <input name="buttonAlert" type = "button" id = "btn" value = "そうしん">
+        </p>
+    </form>
+
+    <script>
+        var btn = document.getElementById('btn');
+        btn.addEventListener('click', function() {
+            const xmlHttpRequest = new XMLHttpRequest();
+            const message = encodeURIComponent(document.getElementById('textMessage').value); 
+            xmlHttpRequest.open("GET", 'js5_server.php?message='+ message, true);
+            xmlHttpRequest.send();
+            xmlHttpRequest.onreadystatechange= function(){
+                if(this.readyState == 4 && this.status == 200){
+                    alert(this.responseText);
+                }
+            }   
+        },false);
+     </script>  
+    </body>
+</html>
