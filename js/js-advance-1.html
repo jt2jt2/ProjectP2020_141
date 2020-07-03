@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html lang="ja">
+    <head>
+    <title>jsadd</title>
+    <meta charset="utf-8">
+    </head>
+    <body>
+        <input id="textLang" type="text" onInput="inputValue(this)" />
+
+        <ul id="prog_list"></ul>
+        <script>
+            function inputValue($this) {
+                const lang =textLang.value;
+                const uppertext = lang.toUpperCase();
+                const languages = [
+                    'Basic',
+                    'C',
+                    'C#',
+                    'C++',
+                    'D',
+                    'Haskell',
+                    'Java',
+                    'JavaScript',
+                    'Kotlin',
+                    'Objective-C',
+                    'Perl',
+                    'R',
+                    'Swift',
+                    'V'
+                ]
+                while(true){
+                    var list = document.getElementById("prog_list");
+                    var item = list.lastChild;
+                    if (item) {
+                        list.removeChild(item);
+                    }
+                    else {
+                        break;
+                    }
+                }
+                var ul = document.getElementById('prog_list');
+                
+                for (var count = 0; count < languages.length; count++) {
+                    var upperLangs = languages[count].toUpperCase();
+                    if(!upperLangs.indexOf(uppertext)&&uppertext!=""){
+                        var li = document.createElement('li');
+                        var text = document.createTextNode(languages[count]);
+                        li.appendChild(text);
+                        ul.appendChild(li);
+                    }
+                }
+            }
+        </script>
+    </body>
+</html>
