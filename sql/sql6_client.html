@@ -1,0 +1,431 @@
+<!DOCTYPE html> 
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>SQL6</title>
+        <style>
+            table,tr,th,td{
+                border:1px solid #000000;
+            }
+            #updateexecute,#deleteexecute{
+                display:none;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h2>全表示</h2>
+            <button id="readAllbtn">テーブル作成</button>
+            <div id ='maintable'></div>
+        </div>
+        <div>
+            <h2>データ追加</h2>
+            <form name="inputform">
+                名前
+                <input type="text" name="name">
+                住所
+                <input type="text" name="address">
+                電話
+                <input type="text" name="phone">
+                Email
+                <input type="text" name="email">
+                <input type="submit" id="addbtn" value="送信">
+            </form>
+        </div>
+        <div>
+            <h2>名前検索</h2>
+            <form name="namesearch">
+                名前
+                <input type="text" name="name">
+                <input type="button" id="nameSearchbtn" value="送信">
+                <div id ='searchResulttable'></div>
+            </form>
+        </div>
+        <div>
+            <h2>データ更新</h2>
+            <div id = "updatesearch">
+                <h3>更新するデータを見つけます</h3>
+                <form name="updatesearchform">
+                    名前
+                    <input type="text" name="name">
+                    住所
+                    <input type="text" name="address">
+                    電話
+                    <input type="text" name="phone">
+                    Email
+                    <input type="text" name="email">
+                    <input type="button" id="updateSearchbtn" value="送信">
+                </form>
+            </div>
+            <div id ='allSearchResulttable'></div>
+            <div id = "updateexecute">
+                <h3>更新したいデータのIDと更新するデータを入れてください</h3>
+                <form name="updateexexuteform">
+                    id
+                    <input type="text" name="id">
+                    名前
+                    <input type="text" name="aftername">
+                    住所
+                    <input type="text" name="afteraddress">
+                    電話
+                    <input type="text" name="afterphone">
+                    Email
+                    <input type="text" name="afteremail">
+                    <input type="button" id="updateExecutebtn" value="送信">
+
+                </form>
+            </div>
+            <div>
+                <h2>データ削除</h2>
+                <div id = "deletesearch">
+                    <h3>削除するデータを見つけます</h3>
+                    <form name="deletesearchform">
+                        名前
+                        <input type="text" name="name">
+                        住所
+                        <input type="text" name="address">
+                        電話
+                        <input type="text" name="phone">
+                        Email
+                        <input type="text" name="email">
+                        <input type="button" id="deleteSearchbtn" value="送信">
+                    </form>
+                </div>
+                <div id ='alldeleteSearchResulttable'></div>
+                <div id = "deleteexecute">
+                    <h3>削除したいデータのIDを入れてください</h3>
+                    <form name="deleteexexuteform">
+                        id
+                        <input type="text" name="id">
+                        <input type="button" id="deleteExecutebtn" value="送信">
+    
+                    </form>
+                </div>
+        </div>
+        
+        <script>
+            var readAllbtn = document.getElementById('readAllbtn');
+            var addbtn = document.getElementById('addbtn');
+            var nameSearchbtn = document.getElementById('nameSearchbtn');
+            var updateSearchbtn = document.getElementById('updateSearchbtn');
+            var updateExecutebtn = document.getElementById('updateExecutebtn');
+            var deleteSearchbtn = document.getElementById('deleteSearchbtn');
+            var deleteExecutebtn = document.getElementById('deleteExecutebtn');
+
+            readAllbtn.addEventListener('click', function() {
+                const xmlHttpRequest = new XMLHttpRequest();
+                xmlHttpRequest.open("GET", 'sql2_server.php?', true);
+                xmlHttpRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF-8'");
+                xmlHttpRequest.send();
+                xmlHttpRequest.onreadystatechange = function(){
+                    if(this.readyState == 4 && this.status == 200){
+                    
+                        const json_obj =JSON.parse(this.responseText);
+                        headers = ["id","名前","住所","電話番号","Email"];
+                        const table = document.createElement('table');
+
+                        var tr = document.createElement('tr');
+                        for(i =0;i<headers.length;i++){
+                            const th = document.createElement('th');
+                            th.textContent = headers[i];
+                            tr.appendChild(th);
+                        }
+                        table.appendChild(tr);
+
+
+                        Object.keys(json_obj).forEach(function (key) {
+                            tr = document.createElement('tr');
+                            var td = document.createElement('td');
+                            td.textContent = json_obj[key].id;
+                            tr.appendChild(td); 
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].name;
+                            tr.appendChild(td); 
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].address;
+                            tr.appendChild(td);   
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].phone;
+                            tr.appendChild(td);                         
+                            
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].email;
+                            tr.appendChild(td); 
+                            table.appendChild(tr);
+
+
+                        });
+                        document.getElementById('maintable').appendChild(table);
+                    }  
+                }
+            },false);
+
+            addbtn.addEventListener('click',function(){
+
+                var index1 = document["inputform"]["name"].value;
+                var index2 = document["inputform"]["address"].value;
+                var index3 = document["inputform"]["phone"].value;
+                var index4 = document["inputform"]["email"].value;
+
+                const xmlHttpRequest = new XMLHttpRequest();
+                const name = encodeURIComponent(index1);
+                const address = encodeURIComponent(index2);
+                const phone = encodeURIComponent(index3);
+                const email = encodeURIComponent(index4);                
+
+                xmlHttpRequest.open("GET", 'sql3_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email, true);
+                xmlHttpRequest.send();
+                xmlHttpRequest.onreadystatechange= function(){
+                    if(this.readyState == 4 && this.status == 200){
+                        alert(this.responseText);
+                    }
+                } 
+            },false)
+
+            nameSearchbtn.addEventListener('click',function(){
+                var index1 = document["namesearch"]["name"].value;
+
+                const xmlHttpRequest = new XMLHttpRequest();
+                const name = encodeURIComponent(index1);
+            
+                xmlHttpRequest.open("GET", 'sql4_server.php?name='+name, true);
+                xmlHttpRequest.send();
+                xmlHttpRequest.onreadystatechange= function(){
+                    if(this.readyState == 4 && this.status == 200){
+
+                        const json_obj =JSON.parse(this.responseText);
+                        headers = ["id","名前","住所","電話番号","Email"];
+                        const table = document.createElement('table');
+
+                        var tr = document.createElement('tr');
+                        for(i =0;i<headers.length;i++){
+                            const th = document.createElement('th');
+                            th.textContent = headers[i];
+                            tr.appendChild(th);
+                        }
+                        table.appendChild(tr);
+
+
+                        Object.keys(json_obj).forEach(function (key) {
+                            tr = document.createElement('tr');
+
+                            var td = document.createElement('td');
+                            td.textContent = json_obj[key].id;
+                            tr.appendChild(td);
+
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].name;
+                            tr.appendChild(td); 
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].address;
+                            tr.appendChild(td);   
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].phone;
+                            tr.appendChild(td);                         
+                            
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].email;
+                            tr.appendChild(td); 
+                            table.appendChild(tr);
+
+                        });
+                        document.getElementById('searchResulttable').appendChild(table);
+                }
+            } 
+            },false)
+            
+            updateSearchbtn.addEventListener('click',function(){
+                var index1 = document["updatesearchform"]["name"].value;
+                var index2 = document["updatesearchform"]["address"].value;
+                var index3 = document["updatesearchform"]["phone"].value;
+                var index4 = document["updatesearchform"]["email"].value;
+
+                const xmlHttpRequest = new XMLHttpRequest();
+                const name = encodeURIComponent(index1);
+                const address = encodeURIComponent(index2);
+                const phone = encodeURIComponent(index3);
+                const email = encodeURIComponent(index4);  
+                const check = encodeURIComponent("false");              
+
+                xmlHttpRequest.open("GET", 'sql5_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email+"+&check="+check, true);
+                xmlHttpRequest.send();
+                xmlHttpRequest.onreadystatechange= function(){
+                    if(this.readyState == 4 && this.status == 200){
+
+                        const json_obj =JSON.parse(this.responseText);
+                        headers = ["id","名前","住所","電話番号","Email"];
+                        const table = document.createElement('table');
+
+                        var tr = document.createElement('tr');
+                        for(i =0;i<headers.length;i++){
+                            const th = document.createElement('th');
+                            th.textContent = headers[i];
+                            tr.appendChild(th);
+                        }
+                        table.appendChild(tr);
+                        Object.keys(json_obj).forEach(function (key) {
+                            tr = document.createElement('tr');
+                            var td = document.createElement('td');
+                            td.textContent = json_obj[key].id;
+                            tr.appendChild(td); 
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].name;
+                            tr.appendChild(td); 
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].address;
+                            tr.appendChild(td);   
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].phone;
+                            tr.appendChild(td);                         
+                            
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].email;
+                            tr.appendChild(td); 
+                            table.appendChild(tr);
+     
+                        });
+                        document.getElementById('updatesearch').style.display="none";
+                        document.getElementById('updateexecute').style.display="initial";
+                        document.getElementById('allSearchResulttable').appendChild(table);
+                    }
+                } 
+            },false)
+            updateExecutebtn.addEventListener('click',function(){
+
+                var index0 = document["updateexexuteform"]["id"].value;
+                var index1 = document["updateexexuteform"]["aftername"].value;
+                var index2 = document["updateexexuteform"]["afteraddress"].value;
+                var index3 = document["updateexexuteform"]["afterphone"].value;
+                var index4 = document["updateexexuteform"]["afteremail"].value;
+                var index5 = document["updatesearchform"]["name"].value;
+                var index6 = document["updatesearchform"]["address"].value;
+                var index7 = document["updatesearchform"]["phone"].value;
+                var index8 = document["updatesearchform"]["email"].value;
+
+
+                const xmlHttpRequest = new XMLHttpRequest();
+                const id = encodeURIComponent(index0);
+                var name="",address="",phone="",email="";
+
+                if(index1!=""){
+                    name = encodeURIComponent(index1);
+                }else{
+                    name = encodeURIComponent(index5);
+                }
+
+                if(index2!=""){
+                    address = encodeURIComponent(index2);
+                }else{
+                    address = encodeURIComponent(index6);
+                }
+                
+                if(index3!=""){
+                    phone = encodeURIComponent(index3);
+                }else{
+                    phone = ncodeURIComponent(index7);
+                }
+
+                if(index4!=""){
+                    email = encodeURIComponent(index4);
+                }else{
+                    email = encodeURIComponent(index8);
+                }
+
+                const check = encodeURIComponent("true");
+
+                xmlHttpRequest.open("GET", 'sql5_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email+"&check="+check+"&id="+id, true);
+                xmlHttpRequest.send();
+                xmlHttpRequest.onreadystatechange= function(){
+                    if(this.readyState == 4 && this.status == 200){
+                        alert(this.responseText);
+                    }
+                } 
+                },false)
+
+                deleteSearchbtn.addEventListener('click',function(){
+                var index1 = document["deletesearchform"]["name"].value;
+                var index2 = document["deletesearchform"]["address"].value;
+                var index3 = document["deletesearchform"]["phone"].value;
+                var index4 = document["deletesearchform"]["email"].value;
+
+                const xmlHttpRequest = new XMLHttpRequest();
+                const name = encodeURIComponent(index1);
+                const address = encodeURIComponent(index2);
+                const phone = encodeURIComponent(index3);
+                const email = encodeURIComponent(index4);  
+                const check = encodeURIComponent("false");              
+
+                xmlHttpRequest.open("GET", 'sql6_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email+"+&check="+check, true);
+                xmlHttpRequest.send();
+                xmlHttpRequest.onreadystatechange= function(){
+                    if(this.readyState == 4 && this.status == 200){
+
+                        const json_obj =JSON.parse(this.responseText);
+                        headers = ["id","名前","住所","電話番号","Email"];
+                        const table = document.createElement('table');
+
+                        var tr = document.createElement('tr');
+                        for(i =0;i<headers.length;i++){
+                            const th = document.createElement('th');
+                            th.textContent = headers[i];
+                            tr.appendChild(th);
+                        }
+                        table.appendChild(tr);
+                        Object.keys(json_obj).forEach(function (key) {
+                            tr = document.createElement('tr');
+                            var td = document.createElement('td');
+                            td.textContent = json_obj[key].id;
+                            tr.appendChild(td); 
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].name;
+                            tr.appendChild(td); 
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].address;
+                            tr.appendChild(td);   
+
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].phone;
+                            tr.appendChild(td);                         
+                            
+                            td = document.createElement('td');
+                            td.textContent = json_obj[key].email;
+                            tr.appendChild(td); 
+                            table.appendChild(tr);
+     
+                        });
+                        document.getElementById('deletesearch').style.display="none";
+                        document.getElementById('deleteexecute').style.display="initial";
+                        document.getElementById('allSearchResulttable').appendChild(table);
+                    }
+                } 
+            },false)
+            deleteExecutebtn.addEventListener('click',function(){
+
+                var index0 = document["deleteexexuteform"]["id"].value;
+
+                const xmlHttpRequest = new XMLHttpRequest();
+                const id = encodeURIComponent(index0);
+                const check = encodeURIComponent("true");
+
+                xmlHttpRequest.open("GET", 'sql6_server.php?check='+check+"&id="+id, true);
+                xmlHttpRequest.send();
+                xmlHttpRequest.onreadystatechange= function(){
+                    if(this.readyState == 4 && this.status == 200){
+                        alert(this.responseText);
+                    }
+                } 
+                },false)
+        </script> 
+    </body> 
+</html>
