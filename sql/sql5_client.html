@@ -58,6 +58,7 @@
                 </form>
             </div>
             <div id ='info'></div>
+            <div id = "updateform"></div>
         </div>
         
         <script>
@@ -214,28 +215,20 @@
                     if(this.readyState == 4 && this.status == 200){
 
                         const json_obj =JSON.parse(this.responseText);
-                        headers = ["id","名前","住所","電話番号","Email"];
-                        const table = document.createElement('table');
 
-                        var tr = document.createElement('tr');
-                        for(i =0;i<headers.length;i++){
-                            const th = document.createElement('th');
-                            th.textContent = headers[i];
-                            tr.appendChild(th);
-                        }
-                        table.appendChild(tr);
+                        var info = document.getElementById('info');
+
+                        var h3Node = document.createElement('h3');
+
+                        var textNode = document.createTextNode('更新用フォームです');
+
+                        h3Node.appendChild(textNode);
+
+                        info.appendChild(h3Node);
+
                         Object.keys(json_obj).forEach(function (key) {
 
-                            var info = document.getElementById('info');
-
-                            var h3Node = document.createElement('h3');
-
-                            var textNode = document.createTextNode('更新用フォームです');
-
-                            h3Node.appendChild(textNode);
-
-                            info.appendChild(h3Node);
-
+ 
                             my_form=document.createElement('FORM');
                             my_form.name="updateexexuteform"+json_obj[key].id;
                             var textNode = document.createTextNode("id"+json_obj[key].id+":");
@@ -259,22 +252,23 @@
                             my_tb.value=json_obj[key].address;
                             my_form.appendChild(my_tb);
 
+                            var textNode = document.createTextNode('電話番号');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="afterphone";
+                            my_tb.value=json_obj[key].email;
+                            my_form.appendChild(my_tb);
 
                             var textNode = document.createTextNode('Email');
                             my_form.appendChild(textNode);
                             my_tb=document.createElement('INPUT');
                             my_tb.type='text';
-                            my_tb.name="afterphone";
+                            my_tb.name="afteremail";
                             my_tb.value=json_obj[key].phone;
                             my_form.appendChild(my_tb);
 
-                            var textNode = document.createTextNode('電話番号');
-                            my_form.appendChild(textNode);
-                            my_tb=document.createElement('INPUT');
-                            my_tb.type='text';
-                            my_tb.name="afteremail";
-                            my_tb.value=json_obj[key].email;
-                            my_form.appendChild(my_tb);
+
 
 
                             my_tb=document.createElement('INPUT');
@@ -310,12 +304,11 @@
                                 } 
                             },false);
                             my_form.appendChild(my_tb);
-
-                            document.body.appendChild(my_form);
-
+                            document.getElementById('updateform').appendChild(my_form);
                             updateExecutebtn = document.getElementById('updateExecutebtn');
     
                         });
+                        
                         document.getElementById('updatesearch').style.display="none";
 
 
