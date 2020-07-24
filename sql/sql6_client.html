@@ -2,12 +2,12 @@
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>SQL6</title>
+        <title>SQL5</title>
         <style>
             table,tr,th,td{
                 border:1px solid #000000;
             }
-            #updateexecute,#deleteexecute{
+            #updateexecute{
                 display:none;
             }
         </style>
@@ -57,50 +57,27 @@
                     <input type="button" id="updateSearchbtn" value="送信">
                 </form>
             </div>
-            <div id ='allSearchResulttable'></div>
-            <div id = "updateexecute">
-                <h3>更新したいデータのIDと更新するデータを入れてください</h3>
-                <form name="updateexexuteform">
-                    id
-                    <input type="text" name="id">
+            <div id='info'></div>
+            <div id='updateform'></div>
+        </div>
+        <div>
+            <h2>データ削除</h2>
+            <div id = "deletesearch">
+                <h3>削除するデータを見つけます</h3>
+                <form name="deletesearchform">
                     名前
-                    <input type="text" name="aftername">
+                    <input type="text" name="name">
                     住所
-                    <input type="text" name="afteraddress">
+                    <input type="text" name="address">
                     電話
-                    <input type="text" name="afterphone">
+                    <input type="text" name="phone">
                     Email
-                    <input type="text" name="afteremail">
-                    <input type="button" id="updateExecutebtn" value="送信">
-
+                    <input type="text" name="email">
+                    <input type="button" id="deleteSearchbtn" value="送信">
                 </form>
             </div>
-            <div>
-                <h2>データ削除</h2>
-                <div id = "deletesearch">
-                    <h3>削除するデータを見つけます</h3>
-                    <form name="deletesearchform">
-                        名前
-                        <input type="text" name="name">
-                        住所
-                        <input type="text" name="address">
-                        電話
-                        <input type="text" name="phone">
-                        Email
-                        <input type="text" name="email">
-                        <input type="button" id="deleteSearchbtn" value="送信">
-                    </form>
-                </div>
-                <div id ='alldeleteSearchResulttable'></div>
-                <div id = "deleteexecute">
-                    <h3>削除したいデータのIDを入れてください</h3>
-                    <form name="deleteexexuteform">
-                        id
-                        <input type="text" name="id">
-                        <input type="button" id="deleteExecutebtn" value="送信">
-    
-                    </form>
-                </div>
+            <div id ='info2'></div>
+            <div id="deleteform" ></div>
         </div>
         
         <script>
@@ -108,9 +85,8 @@
             var addbtn = document.getElementById('addbtn');
             var nameSearchbtn = document.getElementById('nameSearchbtn');
             var updateSearchbtn = document.getElementById('updateSearchbtn');
-            var updateExecutebtn = document.getElementById('updateExecutebtn');
+            var updateExecutebtn;
             var deleteSearchbtn = document.getElementById('deleteSearchbtn');
-            var deleteExecutebtn = document.getElementById('deleteExecutebtn');
 
             readAllbtn.addEventListener('click', function() {
                 const xmlHttpRequest = new XMLHttpRequest();
@@ -260,98 +236,106 @@
 
                         const json_obj =JSON.parse(this.responseText);
                         headers = ["id","名前","住所","電話番号","Email"];
-                        const table = document.createElement('table');
+                        var info = document.getElementById('info');
 
-                        var tr = document.createElement('tr');
-                        for(i =0;i<headers.length;i++){
-                            const th = document.createElement('th');
-                            th.textContent = headers[i];
-                            tr.appendChild(th);
-                        }
-                        table.appendChild(tr);
+                        var h3Node = document.createElement('h3');
+
+                        var textNode = document.createTextNode('更新用フォームです');
+
+                        h3Node.appendChild(textNode);
+
+                        info.appendChild(h3Node);
                         Object.keys(json_obj).forEach(function (key) {
-                            tr = document.createElement('tr');
-                            var td = document.createElement('td');
-                            td.textContent = json_obj[key].id;
-                            tr.appendChild(td); 
 
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].name;
-                            tr.appendChild(td); 
+                            my_form=document.createElement('FORM');
+                            my_form.name="updateexexuteform"+json_obj[key].id;
+                            var textNode = document.createTextNode("id"+json_obj[key].id+":");
+                            my_form.appendChild(textNode);
 
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].address;
-                            tr.appendChild(td);   
 
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].phone;
-                            tr.appendChild(td);                         
-                            
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].email;
-                            tr.appendChild(td); 
-                            table.appendChild(tr);
-     
+
+                            var textNode = document.createTextNode('名前');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="aftername";
+                            my_tb.value=json_obj[key].name;;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('住所');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="afteraddress";
+                            my_tb.value=json_obj[key].address;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('電話番号');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="afteremail";
+                            my_tb.value=json_obj[key].phone;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('Email');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="afterphone";
+                            my_tb.value=json_obj[key].email;
+                            my_form.appendChild(my_tb);
+
+
+
+
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='button';
+                            my_tb.name=json_obj[key].id;
+                            my_tb.value="送信";
+
+                            my_tb.addEventListener('click',function(){
+                                var index = this.name;
+                                var index1 = document["updateexexuteform"+index]["aftername"].value;
+                                var index2 = document["updateexexuteform"+index]["afteraddress"].value;
+                                var index3 = document["updateexexuteform"+index]["afterphone"].value;
+                                var index4 = document["updateexexuteform"+index]["afteremail"].value;
+
+
+                                const xmlHttpRequest = new XMLHttpRequest();
+                                const id = encodeURIComponent(index);
+                                var name="",address="",phone="",email="";
+                                    name = encodeURIComponent(index1);
+                                    address = encodeURIComponent(index2);
+                                    phone = encodeURIComponent(index3);
+                                    email = encodeURIComponent(index4);
+
+
+                                const check = encodeURIComponent("true");
+
+                                xmlHttpRequest.open("GET", 'sql5_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email+"&check="+check+"&id="+id, true);
+                                xmlHttpRequest.send();
+                                xmlHttpRequest.onreadystatechange= function(){
+                                    if(this.readyState == 4 && this.status == 200){
+                                        alert(this.responseText);
+                                    }
+                                } 
+                            },false);
+                            my_form.appendChild(my_tb);
+
+                            updateExecutebtn = document.getElementById('updateExecutebtn');
+
+                            document.getElementById('updateform').appendChild(my_form);
+    
                         });
+
+                        
                         document.getElementById('updatesearch').style.display="none";
-                        document.getElementById('updateexecute').style.display="initial";
-                        document.getElementById('allSearchResulttable').appendChild(table);
                     }
                 } 
-            },false)
-            updateExecutebtn.addEventListener('click',function(){
+            },false);
 
-                var index0 = document["updateexexuteform"]["id"].value;
-                var index1 = document["updateexexuteform"]["aftername"].value;
-                var index2 = document["updateexexuteform"]["afteraddress"].value;
-                var index3 = document["updateexexuteform"]["afterphone"].value;
-                var index4 = document["updateexexuteform"]["afteremail"].value;
-                var index5 = document["updatesearchform"]["name"].value;
-                var index6 = document["updatesearchform"]["address"].value;
-                var index7 = document["updatesearchform"]["phone"].value;
-                var index8 = document["updatesearchform"]["email"].value;
-
-
-                const xmlHttpRequest = new XMLHttpRequest();
-                const id = encodeURIComponent(index0);
-                var name="",address="",phone="",email="";
-
-                if(index1!=""){
-                    name = encodeURIComponent(index1);
-                }else{
-                    name = encodeURIComponent(index5);
-                }
-
-                if(index2!=""){
-                    address = encodeURIComponent(index2);
-                }else{
-                    address = encodeURIComponent(index6);
-                }
-                
-                if(index3!=""){
-                    phone = encodeURIComponent(index3);
-                }else{
-                    phone = ncodeURIComponent(index7);
-                }
-
-                if(index4!=""){
-                    email = encodeURIComponent(index4);
-                }else{
-                    email = encodeURIComponent(index8);
-                }
-
-                const check = encodeURIComponent("true");
-
-                xmlHttpRequest.open("GET", 'sql5_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email+"&check="+check+"&id="+id, true);
-                xmlHttpRequest.send();
-                xmlHttpRequest.onreadystatechange= function(){
-                    if(this.readyState == 4 && this.status == 200){
-                        alert(this.responseText);
-                    }
-                } 
-                },false)
-
-                deleteSearchbtn.addEventListener('click',function(){
+            deleteSearchbtn.addEventListener('click',function(){
                 var index1 = document["deletesearchform"]["name"].value;
                 var index2 = document["deletesearchform"]["address"].value;
                 var index3 = document["deletesearchform"]["phone"].value;
@@ -371,61 +355,87 @@
 
                         const json_obj =JSON.parse(this.responseText);
                         headers = ["id","名前","住所","電話番号","Email"];
-                        const table = document.createElement('table');
+                        var info = document.getElementById('info2');
 
-                        var tr = document.createElement('tr');
-                        for(i =0;i<headers.length;i++){
-                            const th = document.createElement('th');
-                            th.textContent = headers[i];
-                            tr.appendChild(th);
-                        }
-                        table.appendChild(tr);
+                        var h3Node = document.createElement('h3');
+
+                        var textNode = document.createTextNode('削除用フォームです');
+
+                        h3Node.appendChild(textNode);
+
+                        info.appendChild(h3Node);
+
                         Object.keys(json_obj).forEach(function (key) {
-                            tr = document.createElement('tr');
-                            var td = document.createElement('td');
-                            td.textContent = json_obj[key].id;
-                            tr.appendChild(td); 
-
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].name;
-                            tr.appendChild(td); 
-
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].address;
-                            tr.appendChild(td);   
-
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].phone;
-                            tr.appendChild(td);                         
                             
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].email;
-                            tr.appendChild(td); 
-                            table.appendChild(tr);
-     
-                        });
+ 
+                            my_form=document.createElement('FORM');
+                            my_form.name="deleteexexuteform"+json_obj[key].id;
+                            var textNode = document.createTextNode("id"+json_obj[key].id+":");
+                            my_form.appendChild(textNode);
+
+
+                            var textNode = document.createTextNode('名前');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="deletername";
+                            my_tb.value=json_obj[key].name;;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('住所');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="deleteaddress";
+                            my_tb.value=json_obj[key].address;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('電話番号');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="deleteemail";
+                            my_tb.value=json_obj[key].phone;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('Email');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="deletephone";
+                            my_tb.value=json_obj[key].email;
+                            my_form.appendChild(my_tb);
+
+
+
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='button';
+                            my_tb.name=json_obj[key].id;
+                            my_tb.value="削除";
+
+                            my_tb.addEventListener('click',function(){
+                                var index0 = this.name;
+                                const xmlHttpRequest = new XMLHttpRequest();
+                                const id = encodeURIComponent(index0);
+                                const check = encodeURIComponent("true");
+
+                                xmlHttpRequest.open("GET", 'sql6_server.php?check='+check+"&id="+id, true);
+                                xmlHttpRequest.send();
+                                xmlHttpRequest.onreadystatechange= function(){
+                                    if(this.readyState == 4 && this.status == 200){
+                                        alert(this.responseText);
+                                    }
+                                } 
+                            },false)
+                        my_form.appendChild(my_tb);
+
+                        document.getElementById('deleteform').appendChild(my_form);
                         document.getElementById('deletesearch').style.display="none";
-                        document.getElementById('deleteexecute').style.display="initial";
-                        document.getElementById('allSearchResulttable').appendChild(table);
+
+                        });
                     }
                 } 
             },false)
-            deleteExecutebtn.addEventListener('click',function(){
-
-                var index0 = document["deleteexexuteform"]["id"].value;
-
-                const xmlHttpRequest = new XMLHttpRequest();
-                const id = encodeURIComponent(index0);
-                const check = encodeURIComponent("true");
-
-                xmlHttpRequest.open("GET", 'sql6_server.php?check='+check+"&id="+id, true);
-                xmlHttpRequest.send();
-                xmlHttpRequest.onreadystatechange= function(){
-                    if(this.readyState == 4 && this.status == 200){
-                        alert(this.responseText);
-                    }
-                } 
-                },false)
         </script> 
     </body> 
 </html>
