@@ -1,0 +1,22 @@
+<!DOCTYPE html> 
+<html lang="ja">
+    <head>
+    <title>js4</title>
+    </head>
+    <body>
+    <button id="btn">button</button>
+    </body>
+    <script>
+        var btn = document.getElementById('btn');
+        btn.addEventListener('click', function() {
+            const xmlHttpRequest = new XMLHttpRequest();
+            xmlHttpRequest.open("GET", 'js4_server.php?', true);
+            xmlHttpRequest.send();
+            xmlHttpRequest.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200){
+                    alert(this.responseText);
+                }
+            }   
+        },false);
+        </script>
+</html>
