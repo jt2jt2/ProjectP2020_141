@@ -57,25 +57,7 @@
                     <input type="button" id="updateSearchbtn" value="送信">
                 </form>
             </div>
-            <div id ='allSearchResulttable'></div>
-            <div id = "updateexecute">
-                <h3>更新したいデータのIDと更新するデータを入れてください</h3>
-                <form name="updateexexuteform">
-                    id
-                    <input type="text" name="id">
-                    名前
-                    <input type="text" name="aftername">
-                    住所
-                    <input type="text" name="afteraddress">
-                    電話
-                    <input type="text" name="afterphone">
-                    Email
-                    <input type="text" name="afteremail">
-                    <input type="button" id="updateExecutebtn" value="送信">
-
-                </form>
-            </div>
-
+            <div id ='info'></div>
         </div>
         
         <script>
@@ -83,7 +65,7 @@
             var addbtn = document.getElementById('addbtn');
             var nameSearchbtn = document.getElementById('nameSearchbtn');
             var updateSearchbtn = document.getElementById('updateSearchbtn');
-            var updateExecutebtn = document.getElementById('updateExecutebtn');
+            var updateExecutebtn ;
 
             readAllbtn.addEventListener('click', function() {
                 const xmlHttpRequest = new XMLHttpRequest();
@@ -243,86 +225,103 @@
                         }
                         table.appendChild(tr);
                         Object.keys(json_obj).forEach(function (key) {
-                            tr = document.createElement('tr');
-                            var td = document.createElement('td');
-                            td.textContent = json_obj[key].id;
-                            tr.appendChild(td); 
 
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].name;
-                            tr.appendChild(td); 
+                            var info = document.getElementById('info');
 
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].address;
-                            tr.appendChild(td);   
+                            var h3Node = document.createElement('h3');
 
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].phone;
-                            tr.appendChild(td);                         
-                            
-                            td = document.createElement('td');
-                            td.textContent = json_obj[key].email;
-                            tr.appendChild(td); 
-                            table.appendChild(tr);
-     
+                            var textNode = document.createTextNode('更新用フォームです');
+
+                            h3Node.appendChild(textNode);
+
+                            info.appendChild(h3Node);
+
+                            my_form=document.createElement('FORM');
+                            my_form.name="updateexexuteform"+json_obj[key].id;
+                            var textNode = document.createTextNode("id"+json_obj[key].id+":");
+                            my_form.appendChild(textNode);
+
+
+
+                            var textNode = document.createTextNode('名前');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="aftername";
+                            my_tb.value=json_obj[key].name;;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('住所');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="afteraddress";
+                            my_tb.value=json_obj[key].address;
+                            my_form.appendChild(my_tb);
+
+
+                            var textNode = document.createTextNode('Email');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="afterphone";
+                            my_tb.value=json_obj[key].phone;
+                            my_form.appendChild(my_tb);
+
+                            var textNode = document.createTextNode('電話番号');
+                            my_form.appendChild(textNode);
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='text';
+                            my_tb.name="afteremail";
+                            my_tb.value=json_obj[key].email;
+                            my_form.appendChild(my_tb);
+
+
+                            my_tb=document.createElement('INPUT');
+                            my_tb.type='button';
+                            my_tb.name=json_obj[key].id;
+                            my_tb.value="送信";
+
+                            my_tb.addEventListener('click',function(){
+                                var index = this.name;
+                                var index1 = document["updateexexuteform"+index]["aftername"].value;
+                                var index2 = document["updateexexuteform"+index]["afteraddress"].value;
+                                var index3 = document["updateexexuteform"+index]["afterphone"].value;
+                                var index4 = document["updateexexuteform"+index]["afteremail"].value;
+
+
+                                const xmlHttpRequest = new XMLHttpRequest();
+                                const id = encodeURIComponent(index);
+                                var name="",address="",phone="",email="";
+                                    name = encodeURIComponent(index1);
+                                    address = encodeURIComponent(index2);
+                                    phone = encodeURIComponent(index3);
+                                    email = encodeURIComponent(index4);
+
+
+                                const check = encodeURIComponent("true");
+
+                                xmlHttpRequest.open("GET", 'sql5_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email+"&check="+check+"&id="+id, true);
+                                xmlHttpRequest.send();
+                                xmlHttpRequest.onreadystatechange= function(){
+                                    if(this.readyState == 4 && this.status == 200){
+                                        alert(this.responseText);
+                                    }
+                                } 
+                            },false);
+                            my_form.appendChild(my_tb);
+
+                            document.body.appendChild(my_form);
+
+                            updateExecutebtn = document.getElementById('updateExecutebtn');
+    
                         });
                         document.getElementById('updatesearch').style.display="none";
-                        document.getElementById('updateexecute').style.display="initial";
-                        document.getElementById('allSearchResulttable').appendChild(table);
+
+
                     }
                 } 
-            },false)
-            updateExecutebtn.addEventListener('click',function(){
-
-                var index0 = document["updateexexuteform"]["id"].value;
-                var index1 = document["updateexexuteform"]["aftername"].value;
-                var index2 = document["updateexexuteform"]["afteraddress"].value;
-                var index3 = document["updateexexuteform"]["afterphone"].value;
-                var index4 = document["updateexexuteform"]["afteremail"].value;
-                var index5 = document["updatesearchform"]["name"].value;
-                var index6 = document["updatesearchform"]["address"].value;
-                var index7 = document["updatesearchform"]["phone"].value;
-                var index8 = document["updatesearchform"]["email"].value;
-
-
-                const xmlHttpRequest = new XMLHttpRequest();
-                const id = encodeURIComponent(index0);
-                var name="",address="",phone="",email="";
-
-                if(index1!=""){
-                    name = encodeURIComponent(index1);
-                }else{
-                    name = encodeURIComponent(index5);
-                }
-
-                if(index2!=""){
-                    address = encodeURIComponent(index2);
-                }else{
-                    address = encodeURIComponent(index6);
-                }
-                
-                if(index3!=""){
-                    phone = encodeURIComponent(index3);
-                }else{
-                    phone = ncodeURIComponent(index7);
-                }
-
-                if(index4!=""){
-                    email = encodeURIComponent(index4);
-                }else{
-                    email = encodeURIComponent(index8);
-                }
-
-                const check = encodeURIComponent("true");
-
-                xmlHttpRequest.open("GET", 'sql5_server.php?name='+name+"&address="+address+"&phone="+phone+"&email="+email+"&check="+check+"&id="+id, true);
-                xmlHttpRequest.send();
-                xmlHttpRequest.onreadystatechange= function(){
-                    if(this.readyState == 4 && this.status == 200){
-                        alert(this.responseText);
-                    }
-                } 
-                },false)
+            },false);
         </script> 
     </body> 
 </html>
