@@ -58,6 +58,7 @@
                 </form>
             </div>
             <div id ='info'></div>
+            <div id = "updateform"></div>
         </div>
         
         <script>
@@ -311,11 +312,12 @@
                             },false);
                             my_form.appendChild(my_tb);
 
-                            document.body.appendChild(my_form);
+                           
 
                             updateExecutebtn = document.getElementById('updateExecutebtn');
     
                         });
+                        document.getElementById('updateform').appendChild(my_form);
                         document.getElementById('updatesearch').style.display="none";
 
 
